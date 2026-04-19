@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,16 +11,29 @@ public class RoomCharacterController : MonoBehaviour
     Vector2 durationRangeBeforeMove;
     [SerializeField]
     float moveSpeed;
+    [SerializeField]
+    SpriteRenderer spriteRenderer;
+    [SerializeField]
+    List<Sprite> spriteDances;
 
     float elapsedTimeSinceLastMove, timeToMove;
     Vector3 targetPosition;
-    bool isMoving;
+    bool isMoving, isDancing;
+
+    int danceBeatIndex;
 
     void Start()
     {
         elapsedTimeSinceLastMove = 0;
         timeToMove = Random.Range(durationRangeBeforeMove.x, durationRangeBeforeMove.y);
         isMoving = false;
+
+        MusicController.OnBeat += OnBeat;
+
+
+
+
+        StartDancing();
     }
 
     void StartMoving()
@@ -36,7 +50,7 @@ public class RoomCharacterController : MonoBehaviour
 
         if (distance <= 0.001f)
         {
-            RendEndMoving();
+            StopMoving();
             return;
         }
 
@@ -49,7 +63,7 @@ public class RoomCharacterController : MonoBehaviour
             transform.position += direction * moveAmount;
     }
 
-    void RendEndMoving()
+    void StopMoving()
     {
         animator.SetBool("isMoving", false);
         elapsedTimeSinceLastMove = 0;
@@ -66,15 +80,39 @@ public class RoomCharacterController : MonoBehaviour
         return quad.TransformPoint(localPoint);
     }
 
+    void StartDancing()
+    {
+        spriteRenderer.sprite = spriteDances[Random.Range(0, spriteDances.Count - 1)];
+        isDancing = true;
+        StopMoving();
+        danceBeatIndex = Random.Range(0, 2);
+    }
+
+    void OnBeat()
+    {
+        if (isDancing)
+        {
+            spriteRenderer.sprite = spriteDances[Random.Range(0, spriteDances.Count - 1)];
+            animator.SetTrigger("danceBeat" + (danceBeatIndex + 1));
+            danceBeatIndex++;
+            danceBeatIndex %= 2;
+        }
+    }
+
     void Update()
     {
         if (isMoving)
             Move();
-        else
+        else if (!isDancing)
         {
             elapsedTimeSinceLastMove += Time.deltaTime;
             if (elapsedTimeSinceLastMove > timeToMove)
                 StartMoving();
         }
+    }
+
+    void OnDestroy()
+    {
+        MusicController.OnBeat -= OnBeat;
     }
 }

@@ -49,6 +49,11 @@ MonoBehaviour:
   animator: {fileID: 4032205050572430895}
   durationRangeBeforeMove: {x: 1, y: 20}
   moveSpeed: 1
+  spriteRenderer: {fileID: 9026349806349167829}
+  spriteDances:
+  - {fileID: 21300000, guid: c527f4646ef66a44f870583f8115a191, type: 3}
+  - {fileID: 21300000, guid: f8a05546d74dcff4c90052d4bdcc2079, type: 3}
+  - {fileID: 21300000, guid: 2cca38f3fe07a9a40af0b4a2c605f747, type: 3}
 --- !u!1 &215141606858039735
 GameObject:
   m_ObjectHideFlags: 0
@@ -286,4 +291,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animationSpeeds:
   - parameter: idleSpeed
+    range: {x: 0.8, y: 1.1}
+  - parameter: danceSpeed
     range: {x: 0.8, y: 1.1}
