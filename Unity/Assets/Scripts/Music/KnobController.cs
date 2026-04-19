@@ -21,8 +21,7 @@ public class KnobController : MonoBehaviour
 
     void GenerateRandomOffset()
     {
-        //randomOffset = Random.Range(0, 360);
-        randomOffset = 0;
+        randomOffset = Random.Range(0, 360);
         DOVirtual.DelayedCall(0.5f, () =>
         {
             OnValueChanged(0);
