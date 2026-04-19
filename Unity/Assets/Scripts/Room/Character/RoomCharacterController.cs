@@ -30,10 +30,7 @@ public class RoomCharacterController : MonoBehaviour
 
         MusicController.OnBeat += OnBeat;
 
-
-
-
-        StartDancing();
+        //StartDancing();
     }
 
     void StartMoving()
