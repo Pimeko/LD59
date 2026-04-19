@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{9103d53e-0f17-47ee-94aa-f4ee504eb24d}">
+		<property name="assetPath">
+			<value>Music/BillieJean.ogg</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>294.40646258503403</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{ddd92bbf-9d0e-4495-b780-91076a1a1b76}</destination>
+		</relationship>
+	</object>
+</objects>
