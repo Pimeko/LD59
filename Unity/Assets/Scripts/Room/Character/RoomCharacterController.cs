@@ -1,6 +1,9 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class RoomCharacterController : MonoBehaviour
@@ -15,23 +18,43 @@ public class RoomCharacterController : MonoBehaviour
     SpriteRenderer spriteRenderer;
     [SerializeField]
     List<Sprite> spriteDances;
+    [SerializeField]
+    GameObject bubbleGO;
+    [SerializeField]
+    TMP_Text bubbleText;
+    [SerializeField]
+    List<string> textsNoise, textsFast, textsSlow, textsVolume, textsWin, textsFail;
+    [SerializeField]
+    float durationBubble;
+
+    public enum BubbleType
+    {
+        NOISE,
+        FAST,
+        SLOW,
+        VOLUME,
+        WIN,
+        FAIL,
+    }
 
     float elapsedTimeSinceLastMove, timeToMove;
-    Vector3 targetPosition, initialTargetPosition;
+    Vector3 targetPosition;
     bool isMoving, isDancing;
+
+    float elapsedTimeBubble;
+    bool isShowingBubble;
 
     int danceBeatIndex;
 
     void Start()
     {
         elapsedTimeSinceLastMove = 0;
-        timeToMove = Random.Range(durationRangeBeforeMove.x, durationRangeBeforeMove.y);
+        timeToMove = UnityEngine.Random.Range(durationRangeBeforeMove.x, durationRangeBeforeMove.y);
         MusicController.OnBeat += OnBeat;
         GameManager.Instance.OnAllKnobsOK += StartDancing;
 
         StartMoving();
     }
-
 
     void StartMoving()
     {
@@ -69,8 +92,8 @@ public class RoomCharacterController : MonoBehaviour
 
     Vector3 GetRandomPointOnQuad(Transform quad)
     {
-        float x = Random.Range(-0.5f, 0.5f);
-        float y = Random.Range(-0.5f, 0.5f);
+        float x = UnityEngine.Random.Range(-0.5f, 0.5f);
+        float y = UnityEngine.Random.Range(-0.5f, 0.5f);
 
         Vector3 localPoint = new Vector3(x, y, 0f);
 
@@ -79,21 +102,57 @@ public class RoomCharacterController : MonoBehaviour
 
     void StartDancing()
     {
-        spriteRenderer.sprite = spriteDances[Random.Range(0, spriteDances.Count - 1)];
+        spriteRenderer.sprite = spriteDances[UnityEngine.Random.Range(0, spriteDances.Count)];
         isDancing = true;
         StopMoving();
-        danceBeatIndex = Random.Range(0, 2);
+        danceBeatIndex = UnityEngine.Random.Range(0, 2);
     }
 
     void OnBeat()
     {
         if (isDancing)
         {
-            spriteRenderer.sprite = spriteDances[Random.Range(0, spriteDances.Count - 1)];
+            spriteRenderer.sprite = spriteDances[UnityEngine.Random.Range(0, spriteDances.Count)];
             animator.SetTrigger("danceBeat" + (danceBeatIndex + 1));
             danceBeatIndex++;
             danceBeatIndex %= 2;
         }
+    }
+
+    public void ShowBubble(BubbleType type)
+    {
+        bubbleGO.SetActive(true);
+        List<string> texts = null;
+        switch (type)
+        {
+            case BubbleType.NOISE:
+                texts = textsNoise;
+                break;
+            case BubbleType.FAST:
+                texts = textsFast;
+                break;
+            case BubbleType.SLOW:
+                texts = textsSlow;
+                break;
+            case BubbleType.VOLUME:
+                texts = textsVolume;
+                break;
+            case BubbleType.WIN:
+                texts = textsWin;
+                break;
+            case BubbleType.FAIL:
+                texts = textsFail;
+                break;
+        }
+        bubbleText.text = texts[UnityEngine.Random.Range(0, texts.Count)];
+        isShowingBubble = true;
+        elapsedTimeBubble = 0;
+    }
+
+    void HideBubble()
+    {
+        bubbleGO.SetActive(false);
+        isShowingBubble = false;
     }
 
     void Update()
@@ -105,6 +164,15 @@ public class RoomCharacterController : MonoBehaviour
             elapsedTimeSinceLastMove += Time.deltaTime;
             if (elapsedTimeSinceLastMove > timeToMove)
                 StartMoving();
+        }
+
+        if (isShowingBubble)
+        {
+            elapsedTimeBubble += Time.deltaTime;
+            if (elapsedTimeBubble > durationBubble)
+            {
+                HideBubble();
+            }
         }
     }
 

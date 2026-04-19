@@ -31,12 +31,17 @@ public class GameManager : MonoBehaviour
     public Action OnAllKnobsOK;
 
     float volumeValue, effectValue, pitchValue;
+    public bool IsVolumeOK { get { return volumeValue.IsInRange(validMarginVolume); } }
+    public bool IsEffectOK { get { return effectValue.IsInRange(validMarginEffect); } }
+    public bool IsPitchTooSlow { get { return pitchValue < validMarginPitch.x; } }
+    public bool IsPitchTooFast { get { return pitchValue > validMarginPitch.y; } }
+    public bool IsPitchOK { get { return pitchValue.IsInRange(validMarginPitch); } }
 
     void Start()
     {
         volumeKnob.OnKnobChange += OnVolumeChange;
         effectKnob.OnKnobChange += OnEffectChange;
-        pitchKnob.OnKnobChange += OnVPitchChange;
+        pitchKnob.OnKnobChange += OnPitchChange;
     }
 
     void OnVolumeChange(KnobController _, float value)
@@ -51,7 +56,7 @@ public class GameManager : MonoBehaviour
         CheckAllKnobs();
     }
 
-    void OnVPitchChange(KnobController _, float value)
+    void OnPitchChange(KnobController _, float value)
     {
         pitchValue = value;
         CheckAllKnobs();
@@ -59,9 +64,7 @@ public class GameManager : MonoBehaviour
 
     void CheckAllKnobs()
     {
-        if (volumeValue.IsInRange(validMarginVolume)
-            && effectValue.IsInRange(validMarginEffect)
-            && pitchValue.IsInRange(validMarginPitch))
+        if (IsVolumeOK && IsEffectOK && IsPitchOK)
         {
             OnAllKnobsOK?.Invoke();
         }
@@ -71,6 +74,6 @@ public class GameManager : MonoBehaviour
     {
         volumeKnob.OnKnobChange -= OnVolumeChange;
         effectKnob.OnKnobChange -= OnEffectChange;
-        pitchKnob.OnKnobChange -= OnVPitchChange;
+        pitchKnob.OnKnobChange -= OnPitchChange;
     }
 }
