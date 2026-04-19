@@ -17,7 +17,7 @@ public class RoomCharacterController : MonoBehaviour
     List<Sprite> spriteDances;
 
     float elapsedTimeSinceLastMove, timeToMove;
-    Vector3 targetPosition;
+    Vector3 targetPosition, initialTargetPosition;
     bool isMoving, isDancing;
 
     int danceBeatIndex;
@@ -26,12 +26,12 @@ public class RoomCharacterController : MonoBehaviour
     {
         elapsedTimeSinceLastMove = 0;
         timeToMove = Random.Range(durationRangeBeforeMove.x, durationRangeBeforeMove.y);
-        isMoving = false;
-
         MusicController.OnBeat += OnBeat;
+        GameManager.Instance.OnAllKnobsOK += StartDancing;
 
-        //StartDancing();
+        StartMoving();
     }
+
 
     void StartMoving()
     {
@@ -111,5 +111,6 @@ public class RoomCharacterController : MonoBehaviour
     void OnDestroy()
     {
         MusicController.OnBeat -= OnBeat;
+        GameManager.Instance.OnAllKnobsOK -= StartDancing;
     }
 }

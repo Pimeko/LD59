@@ -51,4 +51,9 @@ public static class FloatUtils
         float mult = Mathf.Pow(10f, (float)nbDecimal);
         return Mathf.Round(value * mult) / mult;
     }
+
+    public static bool IsInRange(this float value, Vector2 range)
+    {
+        return value >= range.x && value <= range.y;
+    }
 }

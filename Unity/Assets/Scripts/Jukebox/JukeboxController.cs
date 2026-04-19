@@ -15,7 +15,7 @@ public class JukeboxController : MonoBehaviour
         }
     }
 
-    void OnKnobChange(KnobController controller)
+    void OnKnobChange(KnobController controller, float _)
     {
         controller.transform.SetAsLastSibling();
     }

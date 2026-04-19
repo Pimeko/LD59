@@ -14,7 +14,7 @@ public class KnobController : MonoBehaviour
 
     float randomOffset;
 
-    public Action<KnobController> OnKnobChange;
+    public Action<KnobController, float> OnKnobChange;
 
     void Start()
     {
@@ -44,7 +44,7 @@ public class KnobController : MonoBehaviour
         //print(value + " " + newValue);
         MusicController.Instance.ChangeValue(effect, newValue);
 
-        OnKnobChange?.Invoke(this);
+        OnKnobChange?.Invoke(this, newValue);
     }
 
     void OnDestroy()

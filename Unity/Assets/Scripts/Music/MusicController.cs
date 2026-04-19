@@ -30,6 +30,7 @@ public class MusicController : MonoBehaviour
 
     public enum MusicEffect
     {
+        Volume,
         Distortion,
         Reverb,
         Flanger,
