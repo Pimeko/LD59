@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,13 +11,29 @@ public class KnobController : MonoBehaviour
     [SerializeField]
     KnobRotateController knobRotateController;
 
+    float randomOffset;
+
     void Start()
     {
         knobRotateController.OnValueChanged += OnValueChanged;
+        GenerateRandomOffset();
+    }
+
+    void GenerateRandomOffset()
+    {
+        //randomOffset = Random.Range(0, 360);
+        randomOffset = 0;
+        DOVirtual.DelayedCall(0.5f, () =>
+        {
+            OnValueChanged(0);
+        });
     }
 
     void OnValueChanged(float value)
     {
+        value += randomOffset;
+        value %= 360;
+
         float newValue = -1;
         if (value > 180)
             newValue = value.ChangeRange(new Vector2(180f, 360f), new Vector2(1f, 0f));

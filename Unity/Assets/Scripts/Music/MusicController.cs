@@ -1,3 +1,4 @@
+using DG.Tweening;
 using FMOD.Studio;
 using FMODUnity;
 using System.Collections;
@@ -28,6 +29,9 @@ public class MusicController : MonoBehaviour
     public enum MusicEffect
     {
         Distortion,
+        Reverb,
+        Flanger,
+        Pitch,
     }
 
     EventInstance eventInstance;
@@ -35,7 +39,10 @@ public class MusicController : MonoBehaviour
     void Start()
     {
         eventInstance = RuntimeManager.CreateInstance(fmodEventPath);
-        eventInstance.start();
+        DOVirtual.DelayedCall(1, () =>
+        {
+            eventInstance.start();
+        });
     }
 
     public void ChangeValue(MusicEffect effect, float value)
