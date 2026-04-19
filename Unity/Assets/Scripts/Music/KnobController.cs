@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,8 @@ public class KnobController : MonoBehaviour
 
     float randomOffset;
 
+    public Action<KnobController> OnKnobChange;
+
     void Start()
     {
         knobRotateController.OnValueChanged += OnValueChanged;
@@ -21,7 +24,7 @@ public class KnobController : MonoBehaviour
 
     void GenerateRandomOffset()
     {
-        randomOffset = Random.Range(0, 360);
+        randomOffset = UnityEngine.Random.Range(0, 360);
         DOVirtual.DelayedCall(0.5f, () =>
         {
             OnValueChanged(0);
@@ -40,6 +43,8 @@ public class KnobController : MonoBehaviour
             newValue = value.ChangeRange(new Vector2(0f, 180f), new Vector2(0f, 1f));
         //print(value + " " + newValue);
         MusicController.Instance.ChangeValue(effect, newValue);
+
+        OnKnobChange?.Invoke(this);
     }
 
     void OnDestroy()
