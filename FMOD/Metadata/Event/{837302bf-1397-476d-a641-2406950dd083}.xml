@@ -26,6 +26,7 @@
 			<destination>{8659ab9d-c79d-48bc-a04e-8aaca25ba400}</destination>
 			<destination>{10bc1f50-150b-4f74-8948-9632b574c614}</destination>
 			<destination>{482405a9-53be-4f50-b697-d1848be3b0e9}</destination>
+			<destination>{2a1b6d83-607e-4f7f-b456-26bddbaa1e91}</destination>
 		</relationship>
 		<relationship name="groupTracks">
 			<destination>{b6597071-af66-48f9-b52b-00c580139850}</destination>
@@ -77,6 +78,7 @@
 	<object class="MarkerTrack" id="{8659ab9d-c79d-48bc-a04e-8aaca25ba400}" />
 	<object class="MarkerTrack" id="{10bc1f50-150b-4f74-8948-9632b574c614}" />
 	<object class="MarkerTrack" id="{482405a9-53be-4f50-b697-d1848be3b0e9}" />
+	<object class="MarkerTrack" id="{2a1b6d83-607e-4f7f-b456-26bddbaa1e91}" />
 	<object class="GroupTrack" id="{b6597071-af66-48f9-b52b-00c580139850}">
 		<relationship name="modules">
 			<destination>{43f268c2-d524-48cd-a53a-55e58d84edf0}</destination>
@@ -98,6 +100,7 @@
 			<destination>{9ab47cf7-951c-41df-b174-db9bd8f40367}</destination>
 			<destination>{c34c911d-d011-4ddf-93ac-79f41f6e4610}</destination>
 			<destination>{07fbfeae-1cac-48bd-8fae-926db1e126d2}</destination>
+			<destination>{59cd3d05-a41b-473d-a8da-c9cd36fb8edd}</destination>
 		</relationship>
 	</object>
 	<object class="ParameterProxy" id="{2e6b5c49-1816-4037-b4ad-28c597e0b8bf}">
@@ -299,6 +302,20 @@
 		</relationship>
 		<relationship name="triggerConditions">
 			<destination>{ab7604e2-636d-485d-9ed4-17fa11a4e1aa}</destination>
+		</relationship>
+	</object>
+	<object class="TempoMarker" id="{59cd3d05-a41b-473d-a8da-c9cd36fb8edd}">
+		<property name="position">
+			<value>16.44831569992823</value>
+		</property>
+		<property name="tempo">
+			<value>117</value>
+		</property>
+		<relationship name="timeline">
+			<destination>{a52649fc-af79-4452-bdf1-a3a1f142c25b}</destination>
+		</relationship>
+		<relationship name="markerTrack">
+			<destination>{2a1b6d83-607e-4f7f-b456-26bddbaa1e91}</destination>
 		</relationship>
 	</object>
 	<object class="Automator" id="{18549939-fba3-4283-afb4-84419e4e571d}">

@@ -1,8 +1,10 @@
 using DG.Tweening;
 using FMOD.Studio;
 using FMODUnity;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class MusicController : MonoBehaviour
@@ -34,25 +36,40 @@ public class MusicController : MonoBehaviour
         Pitch,
     }
 
-    EventInstance eventInstance;
+    public static Action OnBeat;
+
+    EventInstance musicInstance;
 
     void Start()
     {
-        eventInstance = RuntimeManager.CreateInstance(fmodEventPath);
+        musicInstance = RuntimeManager.CreateInstance(fmodEventPath);
+        musicInstance.setCallback(MusicCallback,
+            FMOD.Studio.EVENT_CALLBACK_TYPE.TIMELINE_MARKER | FMOD.Studio.EVENT_CALLBACK_TYPE.TIMELINE_BEAT);
         DOVirtual.DelayedCall(1, () =>
         {
-            eventInstance.start();
+            musicInstance.start();
         });
+    }
+
+    [AOT.MonoPInvokeCallback(typeof(FMOD.Studio.EVENT_CALLBACK))]
+    static FMOD.RESULT MusicCallback(FMOD.Studio.EVENT_CALLBACK_TYPE type, IntPtr _event, IntPtr parameters)
+    {
+        if (type == FMOD.Studio.EVENT_CALLBACK_TYPE.TIMELINE_BEAT)
+        {
+            OnBeat?.Invoke();
+        }
+
+        return FMOD.RESULT.OK;
     }
 
     public void ChangeValue(MusicEffect effect, float value)
     {
-        eventInstance.setParameterByName(effect.ToString(), value);
+        musicInstance.setParameterByName(effect.ToString(), value);
     }
 
     void OnDestroy()
     {
-        eventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-        eventInstance.release();
+        musicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        musicInstance.release();
     }
 }
