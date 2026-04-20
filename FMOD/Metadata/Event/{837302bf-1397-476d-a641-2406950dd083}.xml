@@ -253,6 +253,9 @@
 		<property name="length">
 			<value>283.15428571428572</value>
 		</property>
+		<property name="volume">
+			<value>-5</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{efeebb48-5a35-47c3-8c50-4496a786be8c}</destination>
 		</relationship>
@@ -267,6 +270,9 @@
 		<property name="timelockedOffset">
 			<value>24.392380966045494</value>
 		</property>
+		<property name="volume">
+			<value>5.5</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{88919624-973c-433b-b2f3-2dfd965b0105}</destination>
 		</relationship>
@@ -279,7 +285,7 @@
 			<value>235.35746031746032</value>
 		</property>
 		<property name="volume">
-			<value>-4</value>
+			<value>-7.5</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{721518e9-f5dd-4a47-b226-5fabd928cb2b}</destination>
@@ -291,6 +297,9 @@
 		</property>
 		<property name="length">
 			<value>233.17478458049888</value>
+		</property>
+		<property name="volume">
+			<value>-3</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{ae53a2f3-2220-43a1-8b1f-cc036f496b22}</destination>
@@ -1257,6 +1266,7 @@
 			<destination>{80a6beda-0b24-4b1c-866b-cfc4c08ab407}</destination>
 			<destination>{2aeeb63c-64ef-4311-80c1-4a1fe4388e38}</destination>
 			<destination>{e06bf680-2489-43e2-85aa-b0b6f09f9b42}</destination>
+			<destination>{ca763736-1757-4d24-af93-0bc6a63b1a7f}</destination>
 		</relationship>
 	</object>
 	<object class="AutomationPoint" id="{427ff382-7b5f-4091-b347-d00ee15f44b5}">
@@ -1375,7 +1385,15 @@
 			<value>0.20000000000000001</value>
 		</property>
 		<property name="value">
-			<value>0.680000007</value>
+			<value>0.939999998</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{ca763736-1757-4d24-af93-0bc6a63b1a7f}">
+		<property name="position">
+			<value>0.17000000000000001</value>
+		</property>
+		<property name="value">
+			<value>0.419999987</value>
 		</property>
 	</object>
 </objects>

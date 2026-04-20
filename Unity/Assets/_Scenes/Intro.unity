@@ -612,7 +612,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Hey so I got bought a new Jukebox
+  m_text: 'Hey so I bought a new Jukebox
 
     for the nightclub!'
   m_isRightToLeft: 0
