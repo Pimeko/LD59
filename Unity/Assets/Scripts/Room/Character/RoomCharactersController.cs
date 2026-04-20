@@ -26,6 +26,8 @@ public class RoomCharactersController : MonoBehaviour
 
         elapsedHelpBubble = 0;
         currentDelayHelpBubble = Random.Range(delayHelpBubble.x, delayHelpBubble.y);
+
+        GameManager.Instance.OnAllKnobsOK += SpawnWinBubble;
     }
 
     void AddCharacter()
@@ -40,33 +42,39 @@ public class RoomCharactersController : MonoBehaviour
 
     void SpawnHelpBubble()
     {
-        print(characterControllers.Count);
+        //print(characterControllers.Count);
         var randomCharacter = characterControllers.GetRandomItem();
         
         if (!GameManager.Instance.IsEffectOK)
         {
             randomCharacter.ShowBubble(RoomCharacterController.BubbleType.NOISE);
-            print("spawn help effect");
+            //print("spawn help effect");
         }
         else if (!GameManager.Instance.IsPitchOK)
         {
             if (GameManager.Instance.IsPitchTooFast)
             {
                 randomCharacter.ShowBubble(RoomCharacterController.BubbleType.FAST);
-                print("spawn help FAST");
+                //print("spawn help FAST");
             }
             else
             {
                 randomCharacter.ShowBubble(RoomCharacterController.BubbleType.SLOW);
-                print("spawn help SLOW");
+                //print("spawn help SLOW");
             }
         }
         else if (!GameManager.Instance.IsVolumeOK)
         {
             randomCharacter.ShowBubble(RoomCharacterController.BubbleType.VOLUME);
-            print("spawn help VOLUME");
+            //print("spawn help VOLUME");
         }
+    }
 
+    void SpawnWinBubble()
+    {
+        var randomCharacter = characterControllers.GetRandomItem();
+        for (int i = 0; i < 3; i++)
+            randomCharacter.ShowBubble(RoomCharacterController.BubbleType.WIN);
     }
 
     void Update()

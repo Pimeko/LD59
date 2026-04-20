@@ -27,6 +27,8 @@ public class MusicController : MonoBehaviour
 
     [SerializeField]
     string fmodEventPath;
+    [SerializeField]
+    int nbMusics;
 
     public enum MusicEffect
     {
@@ -40,9 +42,12 @@ public class MusicController : MonoBehaviour
     public static Action OnBeat;
 
     EventInstance musicInstance;
+    int musicIndex;
 
     void Start()
     {
+        musicIndex = 0;
+
         musicInstance = RuntimeManager.CreateInstance(fmodEventPath);
         musicInstance.setCallback(MusicCallback,
             FMOD.Studio.EVENT_CALLBACK_TYPE.TIMELINE_MARKER | FMOD.Studio.EVENT_CALLBACK_TYPE.TIMELINE_BEAT);
@@ -66,6 +71,13 @@ public class MusicController : MonoBehaviour
     public void ChangeValue(MusicEffect effect, float value)
     {
         musicInstance.setParameterByName(effect.ToString(), value);
+    }
+
+    public void NextMusic()
+    {
+        musicIndex++;
+        musicIndex %= nbMusics;
+        musicInstance.setParameterByName("MusicIndex", musicIndex);
     }
 
     void OnDestroy()

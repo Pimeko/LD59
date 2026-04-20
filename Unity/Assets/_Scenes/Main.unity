@@ -2043,6 +2043,7 @@ MonoBehaviour:
   validMarginVolume: {x: 0.8, y: 1}
   validMarginEffect: {x: 0, y: 0.2}
   validMarginPitch: {x: 0.4, y: 0.6}
+  allIsOKDuration: 5
 --- !u!1 &1145729922
 GameObject:
   m_ObjectHideFlags: 0
@@ -2576,6 +2577,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fmodEventPath: event:/Music
+  nbMusics: 2
 --- !u!4 &1487141222
 Transform:
   m_ObjectHideFlags: 0

@@ -15,20 +15,23 @@ public class KnobController : MonoBehaviour
     float randomOffset;
 
     public Action<KnobController, float> OnKnobChange;
+    public float Value;
 
     void Start()
     {
         knobRotateController.OnValueChanged += OnValueChanged;
+        GameManager.Instance.OnNextMusic += GenerateRandomOffset;
         GenerateRandomOffset();
+        DOVirtual.DelayedCall(0.5f, () =>
+        {
+            OnValueChanged(0);
+        });
     }
 
     void GenerateRandomOffset()
     {
         randomOffset = UnityEngine.Random.Range(0, 360);
-        DOVirtual.DelayedCall(0.5f, () =>
-        {
-            OnValueChanged(0);
-        });
+        OnValueChanged(0);
     }
 
     void OnValueChanged(float value)
@@ -50,5 +53,6 @@ public class KnobController : MonoBehaviour
     void OnDestroy()
     {
         knobRotateController.OnValueChanged -= OnValueChanged;
+        GameManager.Instance.OnNextMusic -= GenerateRandomOffset;
     }
 }

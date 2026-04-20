@@ -27,8 +27,10 @@ public class GameManager : MonoBehaviour
     KnobController volumeKnob, effectKnob, pitchKnob;
     [SerializeField]
     Vector2 validMarginVolume, validMarginEffect, validMarginPitch;
+    [SerializeField]
+    float allIsOKDuration;
 
-    public Action OnAllKnobsOK;
+    public Action OnAllKnobsOK, OnAllKnobsNotOK, OnNextMusic;
 
     float volumeValue, effectValue, pitchValue;
     public bool IsVolumeOK { get { return volumeValue.IsInRange(validMarginVolume); } }
@@ -36,6 +38,9 @@ public class GameManager : MonoBehaviour
     public bool IsPitchTooSlow { get { return pitchValue < validMarginPitch.x; } }
     public bool IsPitchTooFast { get { return pitchValue > validMarginPitch.y; } }
     public bool IsPitchOK { get { return pitchValue.IsInRange(validMarginPitch); } }
+
+    bool allIsOK;
+    float allIsOKElapsed;
 
     void Start()
     {
@@ -66,7 +71,35 @@ public class GameManager : MonoBehaviour
     {
         if (IsVolumeOK && IsEffectOK && IsPitchOK)
         {
+            allIsOK = true;
+            allIsOKElapsed = 0;
             OnAllKnobsOK?.Invoke();
+        }
+        else if (allIsOK)
+        {
+            OnAllKnobsNotOK?.Invoke();
+            allIsOK = false;
+        }
+    }
+
+    public void NextMusic()
+    {
+
+        print("Next music");
+        MusicController.Instance.NextMusic();
+        OnNextMusic?.Invoke();
+        allIsOK = false;
+    }
+
+    void Update()
+    {
+        if (allIsOK)
+        {
+            allIsOKElapsed += Time.deltaTime;
+            if (allIsOKElapsed > allIsOKDuration)
+            {
+                NextMusic();
+            }
         }
     }
 

@@ -43,15 +43,21 @@ public class RoomCharacterController : MonoBehaviour
 
     float elapsedTimeBubble;
     bool isShowingBubble;
+    BubbleType bubbleType;
 
+    Sprite originalSprite;
     int danceBeatIndex;
 
     void Start()
     {
+        originalSprite = spriteRenderer.sprite;
+
         elapsedTimeSinceLastMove = 0;
         timeToMove = UnityEngine.Random.Range(durationRangeBeforeMove.x, durationRangeBeforeMove.y);
         MusicController.OnBeat += OnBeat;
         GameManager.Instance.OnAllKnobsOK += StartDancing;
+        GameManager.Instance.OnAllKnobsNotOK += StopDancing;
+        GameManager.Instance.OnNextMusic += StopDancing;
 
         StartMoving();
     }
@@ -108,6 +114,14 @@ public class RoomCharacterController : MonoBehaviour
         danceBeatIndex = UnityEngine.Random.Range(0, 2);
     }
 
+    void StopDancing()
+    {
+        if (isShowingBubble && bubbleType == BubbleType.WIN)
+            HideBubble();
+        spriteRenderer.sprite = originalSprite;
+        isDancing = false;
+    }
+
     void OnBeat()
     {
         if (isDancing)
@@ -123,6 +137,7 @@ public class RoomCharacterController : MonoBehaviour
     {
         bubbleGO.SetActive(true);
         List<string> texts = null;
+        bubbleType = type;
         switch (type)
         {
             case BubbleType.NOISE:
@@ -180,5 +195,7 @@ public class RoomCharacterController : MonoBehaviour
     {
         MusicController.OnBeat -= OnBeat;
         GameManager.Instance.OnAllKnobsOK -= StartDancing;
+        GameManager.Instance.OnAllKnobsNotOK -= StopDancing;
+        GameManager.Instance.OnNextMusic -= StopDancing;
     }
 }
