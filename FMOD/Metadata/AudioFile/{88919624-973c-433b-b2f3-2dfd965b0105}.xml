@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{88919624-973c-433b-b2f3-2dfd965b0105}">
+		<property name="assetPath">
+			<value>Music/DontStopMeNow.ogg</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>207.15913832199547</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{ddd92bbf-9d0e-4495-b780-91076a1a1b76}</destination>
+		</relationship>
+	</object>
+</objects>

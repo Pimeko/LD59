@@ -2578,7 +2578,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fmodEventPath: event:/Music
-  nbMusics: 2
+  nbMusics: 8
 --- !u!4 &1487141222
 Transform:
   m_ObjectHideFlags: 0
