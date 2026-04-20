@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -29,8 +30,12 @@ public class GameManager : MonoBehaviour
     Vector2 validMarginVolume, validMarginEffect, validMarginPitch;
     [SerializeField]
     float allIsOKDuration;
+    [SerializeField]
+    GameObject victoryGameObject;
+    [SerializeField]
+    TMP_Text victoryNb;
 
-    public Action OnAllKnobsOK, OnAllKnobsNotOK, OnNextMusic;
+    public Action OnAllKnobsOK, OnAllKnobsNotOK, OnNextMusic, OnFinish;
 
     float volumeValue, effectValue, pitchValue;
     public bool IsVolumeOK { get { return volumeValue.IsInRange(validMarginVolume); } }
@@ -89,6 +94,13 @@ public class GameManager : MonoBehaviour
         MusicController.Instance.NextMusic();
         OnNextMusic?.Invoke();
         allIsOK = false;
+    }
+
+    public void Finish()
+    {
+        victoryGameObject.SetActive(true);
+        victoryNb.text = RoomCharactersController.Instance.characterControllers.Count.ToString();
+        OnFinish?.Invoke();
     }
 
     void Update()

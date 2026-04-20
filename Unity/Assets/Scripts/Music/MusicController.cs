@@ -76,8 +76,15 @@ public class MusicController : MonoBehaviour
     public void NextMusic()
     {
         musicIndex++;
-        musicIndex %= nbMusics;
-        musicInstance.setParameterByName("MusicIndex", musicIndex);
+        if (musicIndex == nbMusics)
+        {
+            print("FINISH!!!");
+        }
+        else
+        {
+            musicIndex %= nbMusics;
+            musicInstance.setParameterByName("MusicIndex", musicIndex);
+        }
     }
 
     void OnDestroy()

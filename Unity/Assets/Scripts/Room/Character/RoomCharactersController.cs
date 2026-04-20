@@ -4,6 +4,22 @@ using UnityEngine;
 
 public class RoomCharactersController : MonoBehaviour
 {
+    #region SINGLETON
+    public static RoomCharactersController Instance;
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+            Destroy(gameObject);
+        else
+        {
+            Instance = this;
+
+            DontDestroyOnLoad(gameObject);
+        }
+    }
+    #endregion
+
     [SerializeField]
     GameObject characterPrefab;
     [SerializeField]
@@ -13,10 +29,12 @@ public class RoomCharactersController : MonoBehaviour
     [SerializeField]
     float maxNbCharacters;
 
-    List<RoomCharacterController> characterControllers;
+    public List<RoomCharacterController> characterControllers;
     float elapsedSpawn, currentDelaySpawn;
     float elapsedHelpBubble, currentDelayHelpBubble;
     float elapsedLeave, currentDelayLeave;
+
+    bool isFinished;
 
     void Start()
     {
@@ -33,11 +51,17 @@ public class RoomCharactersController : MonoBehaviour
 
         GameManager.Instance.OnAllKnobsOK += SpawnWinBubble;
         GameManager.Instance.OnNextMusic += OnNextMusic;
+        GameManager.Instance.OnFinish += OnFinish;
     }
 
     void OnNextMusic()
     {
         elapsedLeave = 0;
+    }
+
+    void OnFinish()
+    {
+        isFinished = true;
     }
 
     void AddCharacter()
@@ -101,6 +125,9 @@ public class RoomCharactersController : MonoBehaviour
 
     void Update()
     {
+        if (isFinished)
+            return;
+
         elapsedSpawn += Time.deltaTime;
         if (elapsedSpawn > currentDelaySpawn)
         {
@@ -133,5 +160,6 @@ public class RoomCharactersController : MonoBehaviour
     {
         GameManager.Instance.OnAllKnobsOK -= SpawnWinBubble;
         GameManager.Instance.OnNextMusic -= OnNextMusic;
+        GameManager.Instance.OnFinish -= OnFinish;
     }
 }
