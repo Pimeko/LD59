@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class KnobController : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class KnobController : MonoBehaviour
     List<MusicController.MusicEffect> effects;
     [SerializeField]
     KnobRotateController knobRotateController;
+    [SerializeField]
+    List<Vector2> rangeBad;
 
     float randomOffset;
     int randomEffectIndex;
@@ -30,9 +33,10 @@ public class KnobController : MonoBehaviour
         GameManager.Instance.OnNextMusic += NextMusic;
         GenerateRandomOffset();
         randomEffectIndex = 0;
+
         DOVirtual.DelayedCall(0.5f, () =>
         {
-            OnValueChanged(0);
+            GenerateRandomOffset();
         });
     }
 
@@ -51,7 +55,11 @@ public class KnobController : MonoBehaviour
     void GenerateRandomOffset()
     {
         randomOffset = UnityEngine.Random.Range(0, 360);
-        OnValueChanged(0);
+        var randomRange = rangeBad.GetRandomItem();
+        float badValue = UnityEngine.Random.Range(randomRange.x, randomRange.y);
+        badValue += randomOffset;
+        badValue %= 360;
+        OnValueChanged(badValue);
     }
 
     void OnValueChanged(float value)

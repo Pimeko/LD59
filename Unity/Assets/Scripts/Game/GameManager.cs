@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     Vector2 validMarginVolume, validMarginEffect, validMarginPitch;
     [SerializeField]
-    float allIsOKDuration;
+    float allIsOKMinDuration, allIsOKDuration;
     [SerializeField]
     GameObject victoryGameObject;
     [SerializeField]
@@ -45,8 +45,8 @@ public class GameManager : MonoBehaviour
     public bool IsPitchOK { get { return pitchValue.IsInRange(validMarginPitch); } }
     public bool IsAllOK { get { return IsVolumeOK && IsEffectOK && IsPitchOK; } }
 
-    bool allIsOK;
-    float allIsOKElapsed;
+    bool reachedAllIsOkMin, allIsOK;
+    float allIsOKMinElapsed, allIsOKElapsed;
 
     void Start()
     {
@@ -79,21 +79,22 @@ public class GameManager : MonoBehaviour
         {
             allIsOK = true;
             allIsOKElapsed = 0;
-            OnAllKnobsOK?.Invoke();
         }
         else if (allIsOK)
         {
             OnAllKnobsNotOK?.Invoke();
+            reachedAllIsOkMin = false;
             allIsOK = false;
         }
     }
 
     public void NextMusic()
     {
-        print("Next music");
+        //print("Next music");
         MusicController.Instance.NextMusic();
         OnNextMusic?.Invoke();
         allIsOK = false;
+        reachedAllIsOkMin = false;
     }
 
     public void Finish()
@@ -107,6 +108,15 @@ public class GameManager : MonoBehaviour
     {
         if (allIsOK)
         {
+            if (!reachedAllIsOkMin)
+            {
+                allIsOKMinElapsed += Time.deltaTime;
+                if (allIsOKMinElapsed > allIsOKMinDuration)
+                {
+                    OnAllKnobsOK?.Invoke();
+                    reachedAllIsOkMin = true;
+                }
+            }
             allIsOKElapsed += Time.deltaTime;
             if (allIsOKElapsed > allIsOKDuration)
             {

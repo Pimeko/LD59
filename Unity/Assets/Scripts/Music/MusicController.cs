@@ -78,7 +78,7 @@ public class MusicController : MonoBehaviour
         musicIndex++;
         if (musicIndex == nbMusics + 1)
         {
-            print("FINISH!!!");
+            //print("FINISH!!!");
             GameManager.Instance.Finish();
         }
         else
