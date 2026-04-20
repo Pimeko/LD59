@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     float allIsOKMinDuration, allIsOKDuration;
     [SerializeField]
-    GameObject victoryGameObject;
+    GameObject victoryGameObject, victoryGoodGO, victoryBadGO;
     [SerializeField]
     TMP_Text victoryNb;
 
@@ -53,6 +54,11 @@ public class GameManager : MonoBehaviour
         volumeKnob.OnKnobChange += OnVolumeChange;
         effectKnob.OnKnobChange += OnEffectChange;
         pitchKnob.OnKnobChange += OnPitchChange;
+
+        DOVirtual.DelayedCall(1, () =>
+        {
+            MusicController.Instance.StartMusic();
+        });
     }
 
     void OnVolumeChange(KnobController _, float value)
@@ -79,6 +85,7 @@ public class GameManager : MonoBehaviour
         {
             allIsOK = true;
             allIsOKElapsed = 0;
+            allIsOKMinElapsed = 0;
         }
         else if (allIsOK)
         {
@@ -91,17 +98,28 @@ public class GameManager : MonoBehaviour
     public void NextMusic()
     {
         //print("Next music");
-        MusicController.Instance.NextMusic();
-        OnNextMusic?.Invoke();
-        allIsOK = false;
-        reachedAllIsOkMin = false;
+        if (MusicController.Instance.IsLastMusic())
+        {
+            Finish();
+        }
+        else
+        {
+            OnNextMusic?.Invoke();
+            MusicController.Instance.NextMusic();
+            allIsOK = false;
+            reachedAllIsOkMin = false;
+        }
     }
 
     public void Finish()
     {
         victoryGameObject.SetActive(true);
-        victoryNb.text = RoomCharactersController.Instance.characterControllers.Count.ToString();
+        int nbChars = RoomCharactersController.Instance.characterControllers.Count;
+        victoryNb.text = nbChars.ToString();
         OnFinish?.Invoke();
+        bool goodEnding = nbChars > 15;
+        victoryGoodGO.SetActive(goodEnding);
+        victoryBadGO.SetActive(!goodEnding);
     }
 
     void Update()

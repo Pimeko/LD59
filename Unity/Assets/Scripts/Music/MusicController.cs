@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MusicController : MonoBehaviour
 {
@@ -47,14 +48,50 @@ public class MusicController : MonoBehaviour
     void Start()
     {
         musicIndex = 0;
+        StartCoroutine(LoadGameAsync());
+    }
+
+    IEnumerator LoadGameAsync()
+    {
+#if UNITY_ADDRESSABLES_EXIST
+        // Iterate all the asset references and start loading their studio banks
+        // in the background, including their audio sample data
+        foreach (var bank in AssetReferenceBanks)
+        {
+            FMODUnity.RuntimeManager.LoadBank(bank, true);
+        }
+#else
+        // Iterate all the Studio Banks and start them loading in the background
+        // including the audio sample data
+        FMODUnity.RuntimeManager.LoadBank("Music", true);
+#endif
+
+        // Keep yielding the co-routine until all the bank loading is done
+        // (for platforms with asynchronous bank loading)
+        while (!FMODUnity.RuntimeManager.HaveAllBanksLoaded)
+        {
+            yield return null;
+        }
+
+        // Keep yielding the co-routine until all the sample data loading is done
+        while (FMODUnity.RuntimeManager.AnySampleDataLoading())
+        {
+            yield return null;
+        }
 
         musicInstance = RuntimeManager.CreateInstance(fmodEventPath);
         musicInstance.setCallback(MusicCallback,
             FMOD.Studio.EVENT_CALLBACK_TYPE.TIMELINE_MARKER | FMOD.Studio.EVENT_CALLBACK_TYPE.TIMELINE_BEAT);
-        DOVirtual.DelayedCall(1, () =>
-        {
-            musicInstance.start();
-        });
+    }
+
+    public void StartMusic()
+    {
+        //while (true)
+        //{
+        //    if (FMODUnity.RuntimeManager.HasBankLoaded("Music"))
+        //        break;
+        //}
+        musicInstance.start();
     }
 
     [AOT.MonoPInvokeCallback(typeof(FMOD.Studio.EVENT_CALLBACK))]
@@ -73,19 +110,15 @@ public class MusicController : MonoBehaviour
         musicInstance.setParameterByName(effect.ToString(), value);
     }
 
+    public bool IsLastMusic()
+    {
+        return musicIndex == nbMusics - 1;
+    }
+
     public void NextMusic()
     {
         musicIndex++;
-        if (musicIndex == nbMusics + 1)
-        {
-            //print("FINISH!!!");
-            GameManager.Instance.Finish();
-        }
-        else
-        {
-            musicIndex %= nbMusics;
-            musicInstance.setParameterByName("MusicIndex", musicIndex);
-        }
+        musicInstance.setParameterByName("MusicIndex", musicIndex);
     }
 
     void OnDestroy()
