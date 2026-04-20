@@ -2,6 +2,7 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,10 +10,16 @@ public class KnobController : MonoBehaviour
 {
     [SerializeField]
     MusicController.MusicEffect effect;
+
+    [SerializeField]
+    bool useRandomEffect = false;
+    [SerializeField]
+    List<MusicController.MusicEffect> effects;
     [SerializeField]
     KnobRotateController knobRotateController;
 
     float randomOffset;
+    int randomEffectIndex;
 
     public Action<KnobController, float> OnKnobChange;
     public float Value;
@@ -20,12 +27,25 @@ public class KnobController : MonoBehaviour
     void Start()
     {
         knobRotateController.OnValueChanged += OnValueChanged;
-        GameManager.Instance.OnNextMusic += GenerateRandomOffset;
+        GameManager.Instance.OnNextMusic += NextMusic;
         GenerateRandomOffset();
+        randomEffectIndex = 0;
         DOVirtual.DelayedCall(0.5f, () =>
         {
             OnValueChanged(0);
         });
+    }
+
+    void NextMusic()
+    {
+        if (useRandomEffect)
+        {
+            MusicController.Instance.ChangeValue(effect, 0);
+            randomEffectIndex++;
+            randomEffectIndex %= effects.Count;
+            effect = effects[randomEffectIndex];
+        }
+        GenerateRandomOffset();
     }
 
     void GenerateRandomOffset()
@@ -53,6 +73,6 @@ public class KnobController : MonoBehaviour
     void OnDestroy()
     {
         knobRotateController.OnValueChanged -= OnValueChanged;
-        GameManager.Instance.OnNextMusic -= GenerateRandomOffset;
+        GameManager.Instance.OnNextMusic -= NextMusic;
     }
 }
