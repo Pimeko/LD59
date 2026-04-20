@@ -1860,6 +1860,7 @@ MonoBehaviour:
   charactersContainer: {fileID: 1795549465}
   delayBeforeSpawn: {x: 2, y: 5}
   delayHelpBubble: {x: 3, y: 3}
+  delayLeave: {x: 10, y: 10}
   maxNbCharacters: 30
 --- !u!1 &1071941266
 GameObject:

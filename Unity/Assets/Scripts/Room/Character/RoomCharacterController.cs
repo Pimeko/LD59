@@ -48,9 +48,14 @@ public class RoomCharacterController : MonoBehaviour
     Sprite originalSprite;
     int danceBeatIndex;
 
+    Vector3 originalPosition;
+    bool isLeaving;
+
     void Start()
     {
         originalSprite = spriteRenderer.sprite;
+        originalPosition = transform.position;
+        isLeaving = false;
 
         elapsedTimeSinceLastMove = 0;
         timeToMove = UnityEngine.Random.Range(durationRangeBeforeMove.x, durationRangeBeforeMove.y);
@@ -91,6 +96,8 @@ public class RoomCharacterController : MonoBehaviour
 
     void StopMoving()
     {
+        if (isLeaving)
+            Destroy(gameObject);
         animator.SetBool("isMoving", false);
         elapsedTimeSinceLastMove = 0;
         isMoving = false;
@@ -108,6 +115,9 @@ public class RoomCharacterController : MonoBehaviour
 
     void StartDancing()
     {
+        if (isLeaving)
+            return;
+
         spriteRenderer.sprite = spriteDances[UnityEngine.Random.Range(0, spriteDances.Count)];
         isDancing = true;
         StopMoving();
@@ -168,6 +178,15 @@ public class RoomCharacterController : MonoBehaviour
     {
         bubbleGO.SetActive(false);
         isShowingBubble = false;
+    }
+
+    public void Leave()
+    {
+        ShowBubble(BubbleType.FAIL);
+        animator.SetBool("isMoving", true);
+        targetPosition = originalPosition;
+        isMoving = true;
+        isLeaving = true;
     }
 
     void Update()

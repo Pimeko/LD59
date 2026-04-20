@@ -9,13 +9,14 @@ public class RoomCharactersController : MonoBehaviour
     [SerializeField]
     Transform characterInitialPosition, charactersContainer;
     [SerializeField]
-    Vector2 delayBeforeSpawn, delayHelpBubble;
+    Vector2 delayBeforeSpawn, delayHelpBubble, delayLeave;
     [SerializeField]
     float maxNbCharacters;
 
     List<RoomCharacterController> characterControllers;
     float elapsedSpawn, currentDelaySpawn;
     float elapsedHelpBubble, currentDelayHelpBubble;
+    float elapsedLeave, currentDelayLeave;
 
     void Start()
     {
@@ -27,7 +28,16 @@ public class RoomCharactersController : MonoBehaviour
         elapsedHelpBubble = 0;
         currentDelayHelpBubble = Random.Range(delayHelpBubble.x, delayHelpBubble.y);
 
+        elapsedLeave = 0;
+        currentDelayLeave = Random.Range(delayLeave.x, delayLeave.y);
+
         GameManager.Instance.OnAllKnobsOK += SpawnWinBubble;
+        GameManager.Instance.OnNextMusic += OnNextMusic;
+    }
+
+    void OnNextMusic()
+    {
+        elapsedLeave = 0;
     }
 
     void AddCharacter()
@@ -42,31 +52,29 @@ public class RoomCharactersController : MonoBehaviour
 
     void SpawnHelpBubble()
     {
-        //print(characterControllers.Count);
+        if (characterControllers.Count == 0)
+            return;
+
         var randomCharacter = characterControllers.GetRandomItem();
-        
+
         if (!GameManager.Instance.IsEffectOK)
         {
             randomCharacter.ShowBubble(RoomCharacterController.BubbleType.NOISE);
-            //print("spawn help effect");
         }
         else if (!GameManager.Instance.IsPitchOK)
         {
             if (GameManager.Instance.IsPitchTooFast)
             {
                 randomCharacter.ShowBubble(RoomCharacterController.BubbleType.FAST);
-                //print("spawn help FAST");
             }
             else
             {
                 randomCharacter.ShowBubble(RoomCharacterController.BubbleType.SLOW);
-                //print("spawn help SLOW");
             }
         }
         else if (!GameManager.Instance.IsVolumeOK)
         {
             randomCharacter.ShowBubble(RoomCharacterController.BubbleType.VOLUME);
-            //print("spawn help VOLUME");
         }
     }
 
@@ -75,6 +83,20 @@ public class RoomCharactersController : MonoBehaviour
         var randomCharacter = characterControllers.GetRandomItem();
         for (int i = 0; i < 3; i++)
             randomCharacter.ShowBubble(RoomCharacterController.BubbleType.WIN);
+    }
+
+    void MakeOneLeave()
+    {
+        if (!GameManager.Instance.IsAllOK)
+        {
+            if (characterControllers.Count == 0)
+                return;
+
+            var randomCharacterIndex = Random.Range(0, characterControllers.Count);
+            var randomCharacter = characterControllers[randomCharacterIndex];
+            randomCharacter.Leave();
+            characterControllers.RemoveAt(randomCharacterIndex);
+        }
     }
 
     void Update()
@@ -96,5 +118,20 @@ public class RoomCharactersController : MonoBehaviour
             elapsedHelpBubble = 0;
             currentDelayHelpBubble = Random.Range(delayHelpBubble.x, delayHelpBubble.y);
         }
+
+        elapsedLeave += Time.deltaTime;
+        if (elapsedLeave > currentDelayLeave)
+        {
+            MakeOneLeave();
+
+            elapsedLeave = 0;
+            currentDelayHelpBubble = Random.Range(delayLeave.x, delayLeave.y);
+        }
+    }
+
+    void OnDestroy()
+    {
+        GameManager.Instance.OnAllKnobsOK -= SpawnWinBubble;
+        GameManager.Instance.OnNextMusic -= OnNextMusic;
     }
 }

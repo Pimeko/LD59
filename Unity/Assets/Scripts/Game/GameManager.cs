@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
     public bool IsPitchTooSlow { get { return pitchValue < validMarginPitch.x; } }
     public bool IsPitchTooFast { get { return pitchValue > validMarginPitch.y; } }
     public bool IsPitchOK { get { return pitchValue.IsInRange(validMarginPitch); } }
+    public bool IsAllOK { get { return IsVolumeOK && IsEffectOK && IsPitchOK; } }
 
     bool allIsOK;
     float allIsOKElapsed;
@@ -69,7 +70,7 @@ public class GameManager : MonoBehaviour
 
     void CheckAllKnobs()
     {
-        if (IsVolumeOK && IsEffectOK && IsPitchOK)
+        if (IsAllOK)
         {
             allIsOK = true;
             allIsOKElapsed = 0;
@@ -84,7 +85,6 @@ public class GameManager : MonoBehaviour
 
     public void NextMusic()
     {
-
         print("Next music");
         MusicController.Instance.NextMusic();
         OnNextMusic?.Invoke();
